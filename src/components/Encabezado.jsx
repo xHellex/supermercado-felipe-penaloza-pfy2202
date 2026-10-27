@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 /**
  * Barra superior con la marca del sitio. El logo es un <Link> a "/",
  * por lo que volver al inicio tampoco recarga la página.
+ * En pantallas medianas y grandes (tablet/desktop) muestra enlaces de navegación
+ * usando utilidades responsivas de Bootstrap (d-none d-md-flex).
  */
 function Encabezado() {
   return (
@@ -21,13 +23,48 @@ function Encabezado() {
           </span>
         </Link>
 
+        {/* Navegación complementaria visible solo en Tablet y Desktop (Bootstrap responsivo) */}
+        <nav className="d-none d-md-flex align-items-center gap-2 mx-auto" aria-label="Navegación superior">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              `btn btn-sm rounded-pill px-3 py-1 fw-semibold ${
+                isActive ? 'btn-success text-white shadow-sm' : 'btn-light text-secondary'
+              }`
+            }
+          >
+            Inicio
+          </NavLink>
+          <NavLink
+            to="/tiendas"
+            className={({ isActive }) =>
+              `btn btn-sm rounded-pill px-3 py-1 fw-semibold ${
+                isActive ? 'btn-success text-white shadow-sm' : 'btn-light text-secondary'
+              }`
+            }
+          >
+            Nuestras tiendas
+          </NavLink>
+          <NavLink
+            to="/preguntas-frecuentes"
+            className={({ isActive }) =>
+              `btn btn-sm rounded-pill px-3 py-1 fw-semibold ${
+                isActive ? 'btn-success text-white shadow-sm' : 'btn-light text-secondary'
+              }`
+            }
+          >
+            Preguntas frecuentes
+          </NavLink>
+        </nav>
+
         <div className="d-flex align-items-center gap-2">
           <span className="badge bg-success-subtle text-success-emphasis border border-success-subtle d-none d-sm-inline-flex align-items-center gap-1">
             <span className="spinner-grow spinner-grow-sm text-success" style={{ width: '0.45rem', height: '0.45rem' }} role="status"></span>
             SPA Activa
           </span>
-          <span className="badge bg-light text-secondary border d-none d-md-inline-block">
-            React Router v7 + Bootstrap 5
+          <span className="badge bg-light text-secondary border d-none d-lg-inline-block">
+            Bootstrap 5 + Router v7
           </span>
         </div>
       </div>

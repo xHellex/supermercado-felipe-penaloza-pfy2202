@@ -42,23 +42,27 @@ const opciones = [
  */
 function BottomNav() {
   return (
-    <nav className="bottom-nav" aria-label="Navegación principal">
-      <ul className="bottom-nav__lista">
-        {opciones.map(({ ruta, texto, Icono, end }) => (
-          <li key={ruta}>
-            <NavLink
-              to={ruta}
-              end={end}
-              className={({ isActive }) =>
-                isActive ? 'bottom-nav__link bottom-nav__link--activo' : 'bottom-nav__link'
-              }
-            >
-              <Icono />
-              <span>{texto}</span>
-            </NavLink>
-          </li>
-        ))}
-      </ul>
+    <nav className="fixed-bottom bottom-nav" aria-label="Navegación principal">
+      <div className="container px-2">
+        <ul className="bottom-nav__lista nav nav-pills nav-justified mx-auto">
+          {opciones.map(({ ruta, texto, Icono, end }) => (
+            <li key={ruta} className="nav-item">
+              <NavLink
+                to={ruta}
+                end={end}
+                className={({ isActive }) =>
+                  `nav-link d-flex flex-column align-items-center bottom-nav__link ${
+                    isActive ? 'bottom-nav__link--activo active' : ''
+                  }`
+                }
+              >
+                <Icono />
+                <span className="small">{texto}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   )
 }

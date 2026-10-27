@@ -4,13 +4,13 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 20;              /* por encima del contenido al hacer scroll */
+  z-index: 1030;            /* estándar de Bootstrap para barras fijas superiores/inferiores */
   padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
-  background: rgb(255 255 255 / 0.85);
+  background: rgb(255 255 255 / 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--borde);
-  box-shadow: 0 -6px 24px rgb(15 61 46 / 0.08);
+  box-shadow: 0 -6px 24px rgb(15 61 46 / 0.12);
 }
 
 .bottom-nav__lista {
