@@ -47,16 +47,15 @@ function PreguntasFrecuentes() {
                   {pregunta}
                 </button>
               </h2>
-              <div
+              <section
                 id={`collapse-${id}`}
-                role="region"
                 aria-labelledby={`heading-${id}`}
                 className={`accordion-collapse collapse ${estaAbierta ? 'show' : ''}`}
               >
                 <div className="accordion-body px-4 py-3 bg-light text-secondary">
                   {respuesta}
                 </div>
-              </div>
+              </section>
             </div>
           )
         })}

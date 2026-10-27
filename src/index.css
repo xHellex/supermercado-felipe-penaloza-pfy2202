@@ -75,13 +75,13 @@ a {
 }
 
 /* Contenedor principal: el padding inferior deja espacio holgado al menú fijo */
-.contenido {
+main.contenido {
   max-width: 1100px;
   margin: 0 auto;
-  padding-top: 1.5rem !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-  padding-bottom: calc(9rem + env(safe-area-inset-bottom)) !important;
+  padding-top: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: calc(9rem + env(safe-area-inset-bottom));
 }
 
 .max-w-1100 {

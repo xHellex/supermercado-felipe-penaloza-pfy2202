@@ -59,10 +59,10 @@ function Encabezado() {
         </nav>
 
         <div className="d-flex align-items-center gap-2">
-          <span className="badge bg-success-subtle text-success-emphasis border border-success-subtle d-none d-sm-inline-flex align-items-center gap-1">
-            <span className="spinner-grow spinner-grow-sm text-success" style={{ width: '0.45rem', height: '0.45rem' }} role="status"></span>
-            SPA Activa
-          </span>
+          <output className="badge bg-success-subtle text-success-emphasis border border-success-subtle d-none d-sm-inline-flex align-items-center gap-1 mb-0">
+            <span className="spinner-grow spinner-grow-sm text-success" style={{ width: '0.45rem', height: '0.45rem' }} aria-hidden="true"></span>
+            <span>SPA Activa</span>
+          </output>
           <span className="badge bg-light text-secondary border d-none d-lg-inline-block">
             Bootstrap 5 + Router v7
           </span>
