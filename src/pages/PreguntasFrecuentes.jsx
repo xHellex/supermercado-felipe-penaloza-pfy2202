@@ -62,7 +62,7 @@ function PreguntasFrecuentes() {
         })}
       </div>
 
-      <div className="card text-white p-4 p-md-5 shadow-sm border-0 rounded-4 llamado" style={{ background: 'linear-gradient(135deg, #0f3d2e, #18553f)' }}>
+      <div className="card text-white p-4 p-md-5 shadow-sm border-0 rounded-4 mb-5 llamado" style={{ background: 'linear-gradient(135deg, #0f3d2e, #18553f)' }}>
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <div>
             <h2 className="h4 fw-bold mb-1">¿No encontraste lo que buscabas?</h2>

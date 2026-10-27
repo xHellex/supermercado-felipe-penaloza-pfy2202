@@ -64,19 +64,20 @@
 
 /* Clase que agrega NavLink cuando su ruta coincide con la URL actual */
 .bottom-nav__link--activo {
-  font-weight: 600;
-  color: var(--verde-700);
+  font-weight: 700;
+  color: var(--verde-900);
   background: var(--verde-100);
+  box-shadow: 0 2px 8px rgb(15 61 46 / 0.12);
 }
 
-/* Indicador superior de la pestaña activa */
+/* Indicador superior de la pestaña activa integrado al botón */
 .bottom-nav__link--activo::before {
   content: '';
   position: absolute;
-  top: -0.5rem;
-  left: 30%;
-  right: 30%;
+  top: 0;
+  left: 25%;
+  right: 25%;
   height: 3px;
-  background: var(--verde-500);
+  background: var(--verde-700);
   border-radius: 0 0 3px 3px;
 }

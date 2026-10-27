@@ -19,7 +19,7 @@ function App() {
       {/* Barra superior con la marca: visible en todas las páginas */}
       <Encabezado />
 
-      <main className="container py-3 py-md-4 contenido">
+      <main className="container pt-3 pt-md-4 contenido">
         <Routes>
           {/* Página principal (Home) */}
           <Route path="/" element={<Home />} />

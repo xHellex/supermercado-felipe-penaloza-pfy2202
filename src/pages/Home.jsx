@@ -87,7 +87,7 @@ function Home() {
         </aside>
       )}
 
-      <section className="card shadow-sm border-0 p-3 p-md-4 mb-4 inventario" aria-labelledby="titulo-inventario">
+      <section className="card shadow-sm border-0 p-3 p-md-4 mb-5 inventario" aria-labelledby="titulo-inventario">
         <h2 id="titulo-inventario" className="h4 fw-bold mb-3 text-success-emphasis">Catálogo y Control de Existencias</h2>
 
         {/* Filtros responsivos con formularios de Bootstrap */}
@@ -126,7 +126,7 @@ function Home() {
         </div>
 
         {/* Tabla responsiva de Bootstrap */}
-        <div className="table-responsive border rounded-3">
+        <div className="table-responsive border rounded-3 mb-2">
           <table className="table table-hover align-middle mb-0">
             <thead className="table-success text-uppercase small">
               <tr>
@@ -165,7 +165,7 @@ function Home() {
             </tbody>
             <tfoot className="table-light">
               <tr>
-                <td colSpan="5" className="ps-3 py-2 text-muted small">
+                <td colSpan="5" className="ps-3 py-3 text-secondary small fw-medium">
                   Mostrando {productosFiltrados.length} de {productos.length} productos en catálogo.
                 </td>
               </tr>

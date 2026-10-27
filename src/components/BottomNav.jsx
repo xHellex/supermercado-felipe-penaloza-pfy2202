@@ -44,20 +44,18 @@ function BottomNav() {
   return (
     <nav className="fixed-bottom bottom-nav" aria-label="Navegación principal">
       <div className="container px-2">
-        <ul className="bottom-nav__lista nav nav-pills nav-justified mx-auto">
+        <ul className="bottom-nav__lista nav nav-justified mx-auto">
           {opciones.map(({ ruta, texto, Icono, end }) => (
             <li key={ruta} className="nav-item">
               <NavLink
                 to={ruta}
                 end={end}
                 className={({ isActive }) =>
-                  `nav-link d-flex flex-column align-items-center bottom-nav__link ${
-                    isActive ? 'bottom-nav__link--activo active' : ''
-                  }`
+                  `bottom-nav__link ${isActive ? 'bottom-nav__link--activo' : ''}`
                 }
               >
                 <Icono />
-                <span className="small">{texto}</span>
+                <span>{texto}</span>
               </NavLink>
             </li>
           ))}
