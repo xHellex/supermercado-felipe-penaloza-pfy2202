@@ -1,0 +1,82 @@
+/* Menú inferior fijo con efecto vidrio (glassmorphism). Usa los tokens de index.css. */
+.bottom-nav {
+  position: fixed;          /* queda pegado a la ventana, no al contenido */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;              /* por encima del contenido al hacer scroll */
+  padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
+  background: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--borde);
+  box-shadow: 0 -6px 24px rgb(15 61 46 / 0.08);
+}
+
+.bottom-nav__lista {
+  display: flex;
+  gap: 0.25rem;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.bottom-nav__lista li {
+  flex: 1;
+}
+
+.bottom-nav__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.45rem 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--texto-suave);
+  text-align: center;
+  text-decoration: none;
+  border-radius: 14px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.bottom-nav__link svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;     /* el ícono toma el mismo color que el texto */
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s ease;
+}
+
+.bottom-nav__link:hover {
+  color: var(--verde-700);
+  background: var(--verde-50);
+}
+
+.bottom-nav__link:hover svg {
+  transform: translateY(-2px);
+}
+
+/* Clase que agrega NavLink cuando su ruta coincide con la URL actual */
+.bottom-nav__link--activo {
+  font-weight: 600;
+  color: var(--verde-700);
+  background: var(--verde-100);
+}
+
+/* Indicador superior de la pestaña activa */
+.bottom-nav__link--activo::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 30%;
+  right: 30%;
+  height: 3px;
+  background: var(--verde-500);
+  border-radius: 0 0 3px 3px;
+}
