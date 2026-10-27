@@ -50,7 +50,6 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: transform 0.2s ease;
 }
 
 .bottom-nav__link:hover {
@@ -58,8 +57,14 @@
   background: var(--verde-50);
 }
 
-.bottom-nav__link:hover svg {
-  transform: translateY(-2px);
+@media (prefers-reduced-motion: no-preference) {
+  .bottom-nav__link svg {
+    transition: transform 0.2s ease;
+  }
+
+  .bottom-nav__link:hover svg {
+    transform: translateY(-2px);
+  }
 }
 
 /* Clase que agrega NavLink cuando su ruta coincide con la URL actual */

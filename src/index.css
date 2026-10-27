@@ -122,11 +122,16 @@ main.contenido {
   color: #fff;
   background: linear-gradient(135deg, var(--verde-500), var(--verde-700));
   box-shadow: 0 6px 16px rgb(31 157 85 / 0.35);
-  transition: transform 0.25s ease;
 }
 
-.marca:hover .marca__logo {
-  transform: rotate(-8deg) scale(1.05);
+@media (prefers-reduced-motion: no-preference) {
+  .marca__logo {
+    transition: transform 0.25s ease;
+  }
+
+  .marca:hover .marca__logo {
+    transform: rotate(-8deg) scale(1.05);
+  }
 }
 
 .marca__logo svg {
@@ -160,8 +165,13 @@ main.contenido {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  /* Cada ruta monta un componente nuevo, así que la animación se repite al navegar */
-  animation: entrar 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pagina {
+    /* Cada ruta monta un componente nuevo, la animación se activa solo si el usuario no prefiere movimiento reducido */
+    animation: entrar 0.35s ease-out;
+  }
 }
 
 @keyframes entrar {
@@ -242,12 +252,21 @@ main.contenido {
   border-top: 4px solid var(--verde-500);
   border-radius: var(--radio);
   box-shadow: var(--sombra-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
 .tarjeta-resumen:hover {
-  transform: translateY(-3px);
   box-shadow: var(--sombra-md);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tarjeta-resumen {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .tarjeta-resumen:hover {
+    transform: translateY(-3px);
+  }
 }
 
 .tarjeta-resumen--alerta {
@@ -471,13 +490,22 @@ main.contenido {
   border: 1px solid var(--borde);
   border-radius: var(--radio-lg);
   box-shadow: var(--sombra-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .tienda:hover {
-  transform: translateY(-4px);
   border-color: var(--verde-100);
   box-shadow: var(--sombra-md);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tienda {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .tienda:hover {
+    transform: translateY(-4px);
+  }
 }
 
 .tienda__nombre {
@@ -595,12 +623,25 @@ main.contenido {
   color: var(--verde-700);
   background: var(--verde-50);
   border-radius: 50%;
-  transition: transform 0.25s ease, background 0.25s, color 0.25s;
+  transition: background 0.25s, color 0.25s;
 }
 
-/* El "+" gira 45° y se convierte en "×" al abrir */
+@media (prefers-reduced-motion: no-preference) {
+  .acordeon__icono {
+    transition: transform 0.25s ease, background 0.25s, color 0.25s;
+  }
+
+  .acordeon__item--abierto .acordeon__icono {
+    transform: rotate(45deg);
+  }
+
+  .acordeon__respuesta {
+    animation: desplegar 0.25s ease-out;
+  }
+}
+
+/* El "+" toma fondo verde al abrir */
 .acordeon__item--abierto .acordeon__icono {
-  transform: rotate(45deg);
   color: #fff;
   background: var(--verde-500);
 }
@@ -608,7 +649,6 @@ main.contenido {
 .acordeon__respuesta {
   padding: 0 1.25rem 1.1rem;
   color: var(--texto-suave);
-  animation: desplegar 0.25s ease-out;
 }
 
 @keyframes desplegar {
@@ -650,17 +690,26 @@ main.contenido {
   border-radius: 999px;
   box-shadow: 0 4px 14px rgb(242 140 40 / 0.35);
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .boton:hover {
   background: #f59e47;
   box-shadow: 0 8px 20px rgb(242 140 40 / 0.45);
-  transform: translateY(-2px);
 }
 
 .boton:active {
   transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .boton {
+    transition: transform 0.15s ease, background 0.2s, box-shadow 0.2s;
+  }
+
+  .boton:hover {
+    transform: translateY(-2px);
+  }
 }
 
 /* ---------- Página 404 ---------- */
