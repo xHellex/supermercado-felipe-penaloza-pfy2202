@@ -181,7 +181,7 @@ main.contenido {
   padding: 2rem 1.75rem;
   border-radius: var(--radio-lg);
   color: #fff;
-  background: linear-gradient(135deg, var(--verde-700) 0%, var(--verde-500) 60%, #4cc38a 100%);
+  background: linear-gradient(135deg, var(--verde-900) 0%, var(--verde-700) 65%, #155738 100%);
   box-shadow: var(--sombra-md);
 }
 
