@@ -1,85 +1,94 @@
 # Supermercado - Gestión de Inventario (SPA)
 
-> **Actividad Formativa 1: Utilizando tecnologías avanzadas de React en sitios web**  
-> **Asignatura:** Desarrollo Frontend II (`PFY2202`)  
-> **Estudiante:** Felipe Peñaloza  
-> **Repositorio de entrega:** `supermercado-felipe-penaloza-pfy2202`  
+> **Actividad Formativa 2: Implementando gestión de estado en componentes frontend con React**
+> **Asignatura:** Desarrollo Frontend II (`PFY2202`)
+> **Estudiante:** Felipe Peñaloza
+> **Repositorio de entrega:** `supermercado-felipe-penaloza-pfy2202`
 
 ---
 
-## 📋 Descripción del Proyecto
+## Descripción
 
-Aplicación web de página única (**Single Page Application - SPA**) para la gestión y monitoreo del inventario de un supermercado, desarrollada con **React**, **React Router v7** y estilizada de forma responsiva mediante **Bootstrap 5** y CSS personalizado.
+Continuación de la Formativa 1: sitio de gestión de inventario de un supermercado hecho con **React 19**, **React Router v7** y **Tailwind CSS v4**.
 
-El sistema permite navegar de manera fluida entre distintas vistas sin recargar el navegador, garantizando un rendimiento óptimo mediante renderizado del lado del cliente y una interfaz adaptable a dispositivos móviles y de escritorio.
+Esta semana se agregó:
 
----
+- Un **menú de inventario** nuevo, que lleva a dos páginas: el listado de artículos y el formulario de ingreso.
+- Un **estado global** (Context API + `useReducer`) con la lista de artículos. Cada uno tiene nombre, marca y tipo de producto, además de stock, stock mínimo y precio.
+- Un **formulario** para agregar artículos, con validación.
+- Una **tabla** con todos los artículos del inventario, con búsqueda por nombre o marca y filtro por tipo.
+- **Tailwind CSS** como framework de estilos en todo el sitio. Reemplaza a Bootstrap, que se usó en la semana 1.
 
-## 🎯 Cumplimiento de la Pauta de Evaluación
+## Cumplimiento de la pauta
 
-| Criterio de Evaluación | Puntaje | Implementación en este proyecto |
+| Criterio | Puntaje | Implementación |
 | :--- | :---: | :--- |
-| **1. Configura la navegación usando tecnologías de React** | **50 pts** (100% CL) | Se configuró `<BrowserRouter>`, `<Routes>` y `<Route>` en `App.jsx`. La navegación se realiza efectivamente mediante `<NavLink>` (con detección de ruta activa `isActive`), `<Link>` para saltos entre secciones sin recarga, y el hook `useNavigate()` para redirección programática desde eventos de usuario. Además, se emplea el hook `useLocation()` para reflejar el estado actual de la ruta en la interfaz. |
-| **2. Desarrolla un componente frontend que da respuesta a todos los requerimientos** | **50 pts** (100% CL) | Se desarrollaron todos los componentes exigidos: vista principal **Home** (panel con métricas, alertas de stock mínimo, tabla y filtros reactivos), **Menú de navegación inferior fijo** (`BottomNav`) y las **dos vistas adicionales** seleccionadas de la lista oficial (**Nuestras tiendas** y **Preguntas frecuentes**), complementadas con una vista para rutas no encontradas (**NotFound 404**). |
+| **1. Navegación y gestión de estados con tecnologías de React** | 40 | **Navegación:** `BrowserRouter`, `Routes` y `Route` en `App.jsx`; `NavLink` con ruta activa en los tres menús; `Link`; `useNavigate()` para ir al listado después de guardar, pasando el nombre del artículo por `state`; `useLocation()` para leer ese `state` y mostrar la ruta actual. **Estado global:** `InventarioContext` + `useReducer` (acciones `agregar`, `eliminar` y `reiniciar`), expuesto con el hook `useInventario()` y persistido en `localStorage`. Lo leen el menú (contador), el inicio (indicadores), el listado y el formulario. |
+| **2. Framework CSS** | 20 | Tailwind CSS v4 con el plugin `@tailwindcss/vite`. El tema extendido con la paleta del sitio está en `@theme` dentro de `index.css`. Todo el sitio usa utilidades: responsivas (`md:`, `lg:`), de estado (`hover:`, `focus:`, `aria-*`) y `motion-safe:` para respetar la preferencia de reducir animaciones. |
+| **3. Componente que responde a todos los requerimientos** | 40 | Nuevo menú → `MenuInventario.jsx`. Página para ingresar artículos → `NuevoArticulo.jsx`. Estado global con nombre, marca y tipo → `context/`. Tabla con todo el inventario → `ListadoArticulos.jsx`. Framework CSS → Tailwind. |
 
----
+## Rutas
 
-## 🧭 Estructura de Rutas y Navegación
-
-| Ruta | Componente / Vista | Descripción |
+| Ruta | Página | Menú |
 | :--- | :--- | :--- |
-| `/` | `Home.jsx` | **Página principal:** Panel de control de existencias, tarjetas de métricas globales, alerta de reposición urgente, buscador por texto y filtro reactivo por categoría. |
-| `/tiendas` | `NuestrasTiendas.jsx` | **Vista adicional 1:** Catálogo de sucursales con dirección, horarios, teléfonos de contacto y servicios en tienda (retiro, estacionamiento, etc.). Incluye navegación programática hacia FAQ mediante `useNavigate()`. |
-| `/preguntas-frecuentes` | `PreguntasFrecuentes.jsx` | **Vista adicional 2:** Centro de ayuda con acordeón interactivo y accesible (`aria-expanded`) sobre políticas de stock, compras y sucursales. Incluye enlace `<Link>` directo hacia tiendas. |
-| `*` | `NotFound.jsx` | **Manejo 404:** Vista amigable para URLs no definidas en el enrutador con botón de retorno a Inicio. |
+| `/` | Inicio: indicadores y alertas de reposición calculados desde el estado global | Sitio |
+| `/tiendas` | Nuestras tiendas | Sitio |
+| `/preguntas-frecuentes` | Preguntas frecuentes | Sitio |
+| `/inventario` | **Listado de artículos** (tabla) | **Inventario** |
+| `/inventario/nuevo` | **Agregar artículo** (formulario) | **Inventario** |
+| `*` | Página 404 | — |
 
----
+## Estado global
 
-## 🧩 Componentes Principales
+```text
+context/
+├── inventario.js           createContext, reducer y hook useInventario()
+└── InventarioProvider.jsx  useReducer + persistencia en localStorage
+```
 
-- **`App.jsx`**: Componente raíz con el contenedor `<BrowserRouter>` y el mapa de rutas `<Routes>`. Mantiene el encabezado superior y el menú inferior fuera de las rutas para persistencia constante.
-- **`Encabezado.jsx`**: Barra superior sticky con identidad corporativa, enlace directo a `/` y badges informativos de SPA activa.
-- **`BottomNav.jsx`**: Menú inferior fijo (`position: fixed; bottom: 0;`) implementado con `<NavLink>`. Cumple el requerimiento de navegación accesible y visualización de la pestaña activa.
-- **`TarjetaResumen.jsx`**: Componente reutilizable basado en Cards de Bootstrap para presentar métricas de inventario (productos, unidades, valor total y alertas).
+El reducer nunca modifica el arreglo anterior: devuelve uno nuevo, y por eso React vuelve a renderizar los componentes que usan el contexto. Al agregar un artículo, el contador del menú, los indicadores del inicio y la tabla se actualizan sin pasar props entre páginas.
 
----
+**Validaciones del formulario:** el nombre debe tener al menos 3 caracteres; la marca y el tipo son obligatorios; el stock y el stock mínimo deben ser enteros mayores o iguales a 0; el precio debe ser un entero mayor a 0; y no se acepta un artículo con el mismo nombre y marca que uno existente. Los errores se muestran bajo cada campo, con `aria-invalid` y `aria-describedby`.
 
-## 🛠️ Tecnologías y Librerías Utilizadas
+## Estructura
 
-- **React 19** (Biblioteca para interfaces de usuario basada en componentes y Virtual DOM).
-- **React Router 7 (`react-router-dom`)** (Enrutamiento cliente para SPAs: `BrowserRouter`, `Routes`, `Route`, `NavLink`, `Link`, `useNavigate`, `useLocation`).
-- **Bootstrap 5** (Diseño responsivo, sistema de grillas `row`/`col`, tablas responsivas, cards, badges y acordeones).
-- **Vite 8** (Entorno de desarrollo ultra rápido y empaquetador para producción).
-- **ESLint** (Reglas de buenas prácticas y prevención de errores).
+```text
+src/
+├── App.jsx                     Provider + router + layout
+├── context/                    Estado global del inventario
+├── components/
+│   ├── Encabezado.jsx          Marca + menú del sitio (tablet/desktop)
+│   ├── MenuInventario.jsx      Menú nuevo: Artículos / Agregar artículo
+│   ├── BottomNav.jsx           Menú inferior del sitio
+│   ├── EncabezadoPagina.jsx    Banner de título reutilizable
+│   ├── LlamadoAccion.jsx       Bloque de llamado a la acción (Tiendas y FAQ)
+│   ├── TarjetaResumen.jsx      Tarjeta de indicador
+│   ├── AlertaReposicion.jsx    Aviso de artículos bajo el stock mínimo (Inicio)
+│   ├── FiltrosArticulos.jsx    Búsqueda y filtro por tipo (Listado)
+│   └── TablaArticulos.jsx      Tabla de artículos (Listado)
+├── pages/                      Home, ListadoArticulos, NuevoArticulo, NuestrasTiendas, PreguntasFrecuentes, NotFound
+├── data/                       Rutas del menú, artículos iniciales, tiendas y preguntas
+└── utils/                      Formato CLP y estado de stock
+```
 
----
+## Mejoras según la retroalimentación de la Semana 1
 
-## 🚀 Instalación y Ejecución Local
+| Observación del docente | Cómo se abordó |
+| :--- | :--- |
+| `Encabezado` y `BottomNav` repetían los mismos `NavLink` | Las rutas están en un arreglo compartido (`data/rutas.js`) que ambos menús recorren con `map`. `BottomNav` solo agrega el ícono de cada ruta. |
+| Antetítulo, badge de ruta, título y bajada repetidos en cada página | Se creó `EncabezadoPagina`, que recibe `antetitulo`, `titulo` y la bajada como `children`. Lo usan las cinco páginas con banner. |
+| Llamado a la acción con gradiente duplicado en Tiendas y FAQ | Se creó `LlamadoAccion`, que recibe `titulo`, `texto`, `to` y `etiqueta`. Ya no quedan estilos en línea. |
+| `Home` mezclaba métricas, alerta, filtros y tabla (~180 líneas) | Se separaron `AlertaReposicion`, `FiltrosArticulos` y `TablaArticulos`. `Home` queda en ~55 líneas y `ListadoArticulos` en ~65, cada una solo con su estado y su composición. |
+| Mezcla de Bootstrap, `index.css` de 761 líneas y `style` en línea | Se usa una sola estrategia, Tailwind CSS. `index.css` queda en 46 líneas (tema y estilos base) y no hay ningún atributo `style` en el código. |
+| Revisar recorridos, incluidas las rutas inexistentes | Ruta comodín `*` → `NotFound`, con un enlace de vuelta al inicio. Desde el formulario, guardar lleva al listado con `useNavigate` + `state`. |
 
-1. **Clonar el repositorio:**
+## Cómo ejecutar
 
-   ```bash
-   git clone https://github.com/xHellex/supermercado-felipe-penaloza-pfy2202.git
-   cd supermercado-felipe-penaloza-pfy2202
-   ```
+```bash
+npm install
+npm run dev       # http://localhost:5173
+npm run build     # build de producción en dist/
+npm run lint
+```
 
-2. **Instalar dependencias:**
-
-   ```bash
-   npm install
-   ```
-
-3. **Iniciar el servidor de desarrollo:**
-
-   ```bash
-   npm run dev
-   ```
-
-   Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
-
-4. **Verificar calidad de código y compilación:**
-
-   ```bash
-   npm run lint
-   npm run build
-   ```
+El botón **Restaurar inventario inicial**, al pie del listado, vuelve a los 14 artículos de ejemplo.

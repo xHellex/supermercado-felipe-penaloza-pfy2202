@@ -1,41 +1,48 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import InventarioProvider from './context/InventarioProvider.jsx'
+import Encabezado from './components/Encabezado.jsx'
+import MenuInventario from './components/MenuInventario.jsx'
+import BottomNav from './components/BottomNav.jsx'
 import Home from './pages/Home.jsx'
 import NuestrasTiendas from './pages/NuestrasTiendas.jsx'
 import PreguntasFrecuentes from './pages/PreguntasFrecuentes.jsx'
+import ListadoArticulos from './pages/ListadoArticulos.jsx'
+import NuevoArticulo from './pages/NuevoArticulo.jsx'
 import NotFound from './pages/NotFound.jsx'
-import BottomNav from './components/BottomNav.jsx'
-import Encabezado from './components/Encabezado.jsx'
 
 /**
- * Componente raíz de la aplicación.
- *
- * <BrowserRouter> habilita el enrutamiento del lado del cliente usando la
- * History API del navegador (URLs limpias, sin recargar la página).
- * <Routes> evalúa la URL actual y renderiza solo la <Route> que coincide.
+ * Componente raíz.
+ * <InventarioProvider> envuelve todo para que cualquier página lea y modifique
+ * el estado global de artículos. <BrowserRouter> habilita la navegación sin recargar.
  */
 function App() {
   return (
-    <BrowserRouter>
-      {/* Barra superior con la marca: visible en todas las páginas */}
-      <Encabezado />
+    <InventarioProvider>
+      <BrowserRouter>
+        {/* Encabezado y menú de inventario quedan fijos juntos al hacer scroll */}
+        <div className="sticky top-0 z-40">
+          <Encabezado />
+          {/* Menú nuevo de esta semana: lleva a las dos páginas de inventario */}
+          <MenuInventario />
+        </div>
 
-      <main className="container pt-3 pt-md-4 contenido">
-        <Routes>
-          {/* Página principal (Home) */}
-          <Route path="/" element={<Home />} />
+        <main className="mx-auto max-w-6xl px-4 pt-6 pb-32">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tiendas" element={<NuestrasTiendas />} />
+            <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
 
-          {/* Vistas adicionales elegidas: Nuestras tiendas y Preguntas frecuentes */}
-          <Route path="/tiendas" element={<NuestrasTiendas />} />
-          <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentes />} />
+            {/* Páginas de inventario (Semana 2) */}
+            <Route path="/inventario" element={<ListadoArticulos />} />
+            <Route path="/inventario/nuevo" element={<NuevoArticulo />} />
 
-          {/* Ruta comodín: cualquier URL no definida muestra la página 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
 
-      {/* Menú inferior: fuera de <Routes> para que se vea en todas las páginas */}
-      <BottomNav />
-    </BrowserRouter>
+        <BottomNav />
+      </BrowserRouter>
+    </InventarioProvider>
   )
 }
 

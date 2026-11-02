@@ -1,78 +1,62 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import EncabezadoPagina from '../components/EncabezadoPagina.jsx'
+import LlamadoAccion from '../components/LlamadoAccion.jsx'
 import { preguntas } from '../data/faq.js'
 
-/**
- * Vista "Preguntas frecuentes": acordeón accesible con Bootstrap
- * donde solo una respuesta permanece abierta a la vez.
- * Utiliza Link y useLocation de React Router.
- */
+/** Vista "Preguntas frecuentes": acordeón accesible con una respuesta abierta a la vez. */
 function PreguntasFrecuentes() {
-  const location = useLocation()
-  /* Guarda el id de la pregunta abierta; null significa que todas están cerradas. */
+  /* id de la pregunta abierta; null = todas cerradas. */
   const [abierta, setAbierta] = useState(null)
-
-  /* Si se hace clic en la pregunta ya abierta, se cierra; si no, se abre esa. */
   const alternar = (id) => setAbierta((actual) => (actual === id ? null : id))
 
   return (
-    <section className="pagina container-fluid px-0">
-      <header className="pagina__encabezado mb-4 shadow">
-        <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
-          <p className="pagina__antetitulo mb-0">Centro de ayuda y soporte</p>
-          <span className="badge bg-white text-dark opacity-75 small">Ruta: {location.pathname}</span>
-        </div>
-        <h1 className="mt-2">Preguntas frecuentes</h1>
-        <p className="pagina__bajada">
-          Resolvemos las dudas más comunes sobre inventario, compras, horarios y funcionamiento de nuestras sucursales.
-        </p>
-      </header>
+    <section className="motion-safe:animate-entrar">
+      <EncabezadoPagina antetitulo="Centro de ayuda" titulo="Preguntas frecuentes">
+        Dudas comunes sobre inventario, compras, horarios y funcionamiento de nuestras sucursales.
+      </EncabezadoPagina>
 
-      {/* Acordeón responsivo de Bootstrap */}
-      <div className="accordion mb-4 shadow-sm rounded-3 overflow-hidden border" id="acordeonFAQ">
+      <div className="mb-6 divide-y divide-slate-100 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
         {preguntas.map(({ id, pregunta, respuesta }) => {
           const estaAbierta = abierta === id
           return (
-            <div key={id} className="accordion-item border-0 border-bottom">
-              <h2 className="accordion-header" id={`heading-${id}`}>
+            <div key={id}>
+              <h2>
                 <button
                   id={`pregunta-${id}`}
                   type="button"
-                  className={`accordion-button fw-semibold py-3 px-4 ${estaAbierta ? '' : 'collapsed'}`}
                   aria-expanded={estaAbierta}
-                  aria-controls={`collapse-${id}`}
+                  aria-controls={`respuesta-${id}`}
                   onClick={() => alternar(id)}
+                  className={`flex w-full items-center gap-3 px-5 py-4 text-left font-sans font-semibold hover:bg-verde-50 ${
+                    estaAbierta ? 'bg-verde-50 text-verde-900' : 'text-slate-800'
+                  }`}
                 >
-                  <span className="me-2 text-success fw-bold">#{id}</span>
-                  {pregunta}
+                  <span className="font-bold text-verde-700">#{id}</span>
+                  <span className="flex-1">{pregunta}</span>
+                  <span className={`text-xl motion-safe:transition-transform ${estaAbierta ? 'rotate-45' : ''}`} aria-hidden="true">
+                    +
+                  </span>
                 </button>
               </h2>
               <section
-                id={`collapse-${id}`}
-                aria-labelledby={`heading-${id}`}
-                className={`accordion-collapse collapse ${estaAbierta ? 'show' : ''}`}
+                id={`respuesta-${id}`}
+                aria-labelledby={`pregunta-${id}`}
+                hidden={!estaAbierta}
+                className="bg-slate-50 px-5 py-4 text-slate-600"
               >
-                <div className="accordion-body px-4 py-3 bg-light text-secondary">
-                  {respuesta}
-                </div>
+                {respuesta}
               </section>
             </div>
           )
         })}
       </div>
 
-      <div className="card text-white p-4 p-md-5 shadow-sm border-0 rounded-4 mb-5 llamado" style={{ background: 'linear-gradient(135deg, #0f3d2e, #18553f)' }}>
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-          <div>
-            <h2 className="h4 fw-bold mb-1">¿No encontraste lo que buscabas?</h2>
-            <p className="text-white-50 mb-0">Puedes visitarnos presencialmente o consultar en el mesón de atención de cualquiera de nuestras tiendas.</p>
-          </div>
-          {/* <Link> navega a otra ruta de la SPA sin recargar la página */}
-          <Link to="/tiendas" className="btn btn-warning fw-bold rounded-pill px-4 py-2 text-dark shadow-sm align-self-start align-self-md-center flex-shrink-0 text-decoration-none">
-            Visita nuestras tiendas
-          </Link>
-        </div>
-      </div>
+      <LlamadoAccion
+        titulo="¿No encontraste lo que buscabas?"
+        texto="Consulta en el mesón de atención de cualquiera de nuestras tiendas."
+        to="/tiendas"
+        etiqueta="Visita nuestras tiendas"
+      />
     </section>
   )
 }
