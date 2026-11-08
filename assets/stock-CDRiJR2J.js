@@ -1,0 +1,1 @@
+function e(e){return e.stock===0?{texto:`Sin stock`,clases:`bg-red-50 text-red-800 ring-red-200`}:e.stock<=e.stockMinimo?{texto:`Stock bajo`,clases:`bg-amber-50 text-amber-800 ring-amber-200`}:{texto:`Disponible`,clases:`bg-verde-50 text-verde-900 ring-verde-100`}}export{e as t};
