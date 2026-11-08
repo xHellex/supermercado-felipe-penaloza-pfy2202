@@ -44,3 +44,35 @@
     @apply rounded-md outline-3 outline-offset-2 outline-naranjo-500;
   }
 }
+
+/*
+ * Componentes de estilo reutilizables. Las utilidades escritas en el JSX
+ * tienen prioridad (capa utilities), así cada uso puede ajustar tamaño o forma.
+ */
+@layer components {
+  /* Input y select: el borde rojo sale de aria-invalid, sin clases condicionales en el JSX */
+  .control {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-verde-500 focus:ring-2 focus:ring-verde-100 focus:outline-none aria-invalid:border-red-500 aria-invalid:focus:ring-red-100;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2 font-semibold no-underline transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primario {
+    @apply bg-verde-700 text-white shadow-sm hover:bg-verde-900;
+  }
+
+  .btn-secundario {
+    @apply text-slate-600 ring-1 ring-slate-300 hover:bg-slate-50;
+  }
+
+  .btn-peligro {
+    @apply text-red-700 hover:bg-red-50;
+  }
+
+  /* Texto oscuro sobre naranjo: el blanco no alcanza el contraste mínimo de WCAG */
+  .btn-acento {
+    @apply bg-naranjo-500 text-slate-900 shadow-sm hover:bg-amber-400;
+  }
+}

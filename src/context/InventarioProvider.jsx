@@ -1,43 +1,52 @@
 import { useEffect, useMemo, useReducer } from 'react'
 import { InventarioContext, inventarioReducer } from './inventario.js'
-import { articulosIniciales } from '../data/productos.js'
+import { CLAVE, CLAVE_ANTERIOR, cargarEstado, estadoInicial, serializarEstado } from './almacenamiento.js'
 
-const CLAVE_ALMACENAMIENTO = 'supermercado:articulos'
-
-/** Lee el inventario guardado; si no hay o está dañado, parte con los datos iniciales. */
-function cargarArticulos() {
+/** Lee el inventario guardado (o el de la semana 2) y lo valida; sin almacenamiento, parte con el inicial. */
+function leerAlmacenamiento() {
   try {
-    const guardado = localStorage.getItem(CLAVE_ALMACENAMIENTO)
-    return guardado ? JSON.parse(guardado) : articulosIniciales
+    return cargarEstado(localStorage.getItem(CLAVE) ?? localStorage.getItem(CLAVE_ANTERIOR))
   } catch {
-    return articulosIniciales
+    return estadoInicial()
   }
 }
 
 /**
- * Provee el estado global del inventario a toda la aplicación.
- * Se guarda en localStorage para que los artículos agregados no se pierdan al recargar.
+ * Provee el estado global del inventario y del carrito a toda la aplicación.
+ * Se guarda en localStorage (con versión) para que nada se pierda al recargar.
  */
 function InventarioProvider({ children }) {
-  const [articulos, dispatch] = useReducer(inventarioReducer, undefined, cargarArticulos)
+  const [estado, dispatch] = useReducer(inventarioReducer, undefined, leerAlmacenamiento)
 
   useEffect(() => {
     try {
-      localStorage.setItem(CLAVE_ALMACENAMIENTO, JSON.stringify(articulos))
+      localStorage.setItem(CLAVE, serializarEstado(estado))
     } catch {
       // Sin almacenamiento disponible (modo privado): el estado sigue funcionando en memoria.
     }
-  }, [articulos])
+  }, [estado])
 
-  /* useMemo evita crear un objeto nuevo en cada render si los artículos no cambiaron. */
+  /* useMemo evita crear un objeto nuevo en cada render si el estado no cambió. */
   const valor = useMemo(
     () => ({
-      articulos,
+      articulos: estado.articulos,
+      carrito: estado.carrito,
       agregarArticulo: (articulo) => dispatch({ type: 'agregar', articulo }),
-      eliminarArticulo: (id) => dispatch({ type: 'eliminar', id }),
-      reiniciarInventario: () => dispatch({ type: 'reiniciar', articulos: articulosIniciales }),
+      /** Elimina y devuelve lo necesario para deshacer: el artículo, su línea del carrito y su posición. */
+      eliminarArticulo: (id) => {
+        const indice = estado.articulos.findIndex((a) => a.id === id)
+        const deshacer = { articulo: estado.articulos[indice], linea: estado.carrito.find((l) => l.id === id), indice }
+        dispatch({ type: 'eliminar', id })
+        return deshacer
+      },
+      restaurarArticulo: (deshacer) => dispatch({ type: 'restaurar', ...deshacer }),
+      agregarAlCarrito: (id, cantidad) => dispatch({ type: 'agregarAlCarrito', id, cantidad }),
+      aumentar: (id) => dispatch({ type: 'aumentar', id }),
+      disminuir: (id) => dispatch({ type: 'disminuir', id }),
+      quitarDelCarrito: (id) => dispatch({ type: 'quitarDelCarrito', id }),
+      reiniciarInventario: () => dispatch({ type: 'reiniciar', estado: estadoInicial() }),
     }),
-    [articulos],
+    [estado],
   )
 
   return <InventarioContext.Provider value={valor}>{children}</InventarioContext.Provider>

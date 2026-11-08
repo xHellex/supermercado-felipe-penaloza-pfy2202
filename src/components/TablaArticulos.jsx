@@ -1,14 +1,18 @@
+import { Link, useLocation } from 'react-router'
 import { formatearNumero, formatearPrecio } from '../utils/formato.js'
 import { estadoStock } from '../utils/stock.js'
 
 /**
- * Tabla de artículos del inventario.
+ * Tabla de artículos del inventario. El nombre lleva al detalle y le pasa
+ * la URL actual (con su filtro) para que "Volver al listado" la recupere.
  *
  * @param {Array}    articulos  - Artículos a mostrar (ya filtrados).
  * @param {string}   destacado  - Nombre del artículo recién agregado, para resaltarlo.
  * @param {Function} onEliminar - Recibe el id del artículo a eliminar.
  */
 function TablaArticulos({ articulos, destacado, onEliminar }) {
+  const { pathname, search } = useLocation()
+
   return (
     <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200">
       <table className="w-full min-w-180 text-left text-sm">
@@ -29,7 +33,15 @@ function TablaArticulos({ articulos, destacado, onEliminar }) {
             const estado = estadoStock(a)
             return (
               <tr key={a.id} className={a.nombre === destacado ? 'bg-amber-50' : 'hover:bg-slate-50'}>
-                <td className="px-4 py-3 font-medium text-slate-900">{a.nombre}</td>
+                <td className="px-4 py-3 font-medium">
+                  <Link
+                    to={`/inventario/${a.id}`}
+                    state={{ volver: `${pathname}${search}` }}
+                    className="text-verde-900 underline decoration-verde-100 underline-offset-4 hover:decoration-verde-700"
+                  >
+                    {a.nombre}
+                  </Link>
+                </td>
                 <td className="px-4 py-3 text-slate-600">{a.marca}</td>
                 <td className="px-4 py-3">
                   <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">{a.tipo}</span>
@@ -43,7 +55,7 @@ function TablaArticulos({ articulos, destacado, onEliminar }) {
                   <button
                     type="button"
                     onClick={() => onEliminar(a.id)}
-                    className="rounded-md px-2 py-1 text-xs font-semibold text-red-700 hover:bg-red-50"
+                    className="btn btn-peligro rounded-md px-2 py-1 text-xs"
                     aria-label={`Eliminar ${a.nombre}`}
                   >
                     Eliminar

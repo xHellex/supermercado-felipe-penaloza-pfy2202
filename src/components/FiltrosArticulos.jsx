@@ -1,7 +1,4 @@
-import { Link } from 'react-router-dom'
-
-const claseControl =
-  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-verde-500 focus:ring-2 focus:ring-verde-100 focus:outline-none'
+import { Link } from 'react-router'
 
 /**
  * Búsqueda por nombre o marca y filtro por tipo del listado.
@@ -26,23 +23,20 @@ function FiltrosArticulos({ busqueda, onBusquedaChange, tipo, onTipoChange, tipo
           placeholder="Ej: Leche, Carozzi..."
           value={busqueda}
           onChange={(e) => onBusquedaChange(e.target.value)}
-          className={claseControl}
+          className="control"
         />
       </div>
       <div>
         <label htmlFor="filtro-tipo" className="mb-1 block text-sm font-semibold text-slate-600">
           Tipo de producto
         </label>
-        <select id="filtro-tipo" value={tipo} onChange={(e) => onTipoChange(e.target.value)} className={claseControl}>
+        <select id="filtro-tipo" value={tipo} onChange={(e) => onTipoChange(e.target.value)} className="control">
           {tipos.map((t) => (
             <option key={t}>{t}</option>
           ))}
         </select>
       </div>
-      <Link
-        to="/inventario/nuevo"
-        className="rounded-lg bg-naranjo-500 px-4 py-2 text-center font-semibold text-white no-underline shadow-sm hover:bg-naranjo-600"
-      >
+      <Link to="/inventario/nuevo" className="btn btn-acento px-4">
         + Agregar artículo
       </Link>
     </div>

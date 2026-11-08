@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 
 /**
  * Banner con el título de cada página. Muestra la ruta actual con useLocation()

@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import EncabezadoPagina from '../components/EncabezadoPagina.jsx'
 import TarjetaResumen from '../components/TarjetaResumen.jsx'
 import AlertaReposicion from '../components/AlertaReposicion.jsx'
 import { useInventario } from '../context/inventario.js'
 import { formatearNumero, formatearPrecio } from '../utils/formato.js'
+import { resumenInventario } from '../utils/selectores.js'
 
 /**
  * Página principal: indicadores y alertas de reposición calculados desde el
@@ -12,10 +13,7 @@ import { formatearNumero, formatearPrecio } from '../utils/formato.js'
 function Home() {
   const { articulos } = useInventario()
 
-  const totalUnidades = articulos.reduce((suma, a) => suma + a.stock, 0)
-  const valorInventario = articulos.reduce((suma, a) => suma + a.stock * a.precio, 0)
-  const tipos = new Set(articulos.map((a) => a.tipo))
-  const porReponer = articulos.filter((a) => a.stock <= a.stockMinimo)
+  const resumen = resumenInventario(articulos)
 
   return (
     <section className="motion-safe:animate-entrar">
@@ -24,13 +22,13 @@ function Home() {
       </EncabezadoPagina>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <TarjetaResumen titulo="Artículos" valor={formatearNumero(articulos.length)} detalle={`${tipos.size} tipos de producto`} />
-        <TarjetaResumen titulo="Unidades en stock" valor={formatearNumero(totalUnidades)} detalle="Total en bodega" />
-        <TarjetaResumen titulo="Valor del inventario" valor={formatearPrecio(valorInventario)} detalle="Stock × precio unitario" />
-        <TarjetaResumen titulo="Por reponer" valor={formatearNumero(porReponer.length)} detalle="En o bajo el stock mínimo" variante="alerta" />
+        <TarjetaResumen titulo="Artículos" valor={formatearNumero(resumen.articulos)} detalle={`${resumen.tipos} tipos de producto`} />
+        <TarjetaResumen titulo="Unidades en stock" valor={formatearNumero(resumen.unidades)} detalle="Total en bodega" />
+        <TarjetaResumen titulo="Valor del inventario" valor={formatearPrecio(resumen.valor)} detalle="Stock × precio unitario" />
+        <TarjetaResumen titulo="Por reponer" valor={formatearNumero(resumen.porReponer.length)} detalle="En o bajo el stock mínimo" variante="alerta" />
       </div>
 
-      <AlertaReposicion articulos={porReponer} />
+      <AlertaReposicion articulos={resumen.porReponer} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Link

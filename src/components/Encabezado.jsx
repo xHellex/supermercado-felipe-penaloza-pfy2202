@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router'
 import { rutasSitio } from '../data/rutas.js'
 
 /** Clases de un enlace del menú superior según si su ruta está activa. */

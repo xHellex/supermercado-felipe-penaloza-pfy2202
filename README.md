@@ -1,94 +1,124 @@
-# Supermercado - Gestión de Inventario (SPA)
+# Supermercado: gestión de inventario y carrito (SPA)
 
-> **Actividad Formativa 2: Implementando gestión de estado en componentes frontend con React**
+> **Actividad sumativa semana 3: Desarrollando sitios web con React avanzado**
 > **Asignatura:** Desarrollo Frontend II (`PFY2202`)
 > **Estudiante:** Felipe Peñaloza
-> **Repositorio de entrega:** `supermercado-felipe-penaloza-pfy2202`
+> **Repositorio:** `supermercado-felipe-penaloza-pfy2202`
+> **Sitio publicado (gh-pages):** <https://xhellex.github.io/supermercado-felipe-penaloza-pfy2202/>
 
 ---
 
 ## Descripción
 
-Continuación de la Formativa 1: sitio de gestión de inventario de un supermercado hecho con **React 19**, **React Router v7** y **Tailwind CSS v4**.
+Este proyecto continúa la formativa 2. Es un sitio de gestión de inventario para un supermercado, hecho con **React 19**, **React Router v7** y **Tailwind CSS v4**, y probado con **Vitest**.
 
 Esta semana se agregó:
 
-- Un **menú de inventario** nuevo, que lleva a dos páginas: el listado de artículos y el formulario de ingreso.
-- Un **estado global** (Context API + `useReducer`) con la lista de artículos. Cada uno tiene nombre, marca y tipo de producto, además de stock, stock mínimo y precio.
-- Un **formulario** para agregar artículos, con validación.
-- Una **tabla** con todos los artículos del inventario, con búsqueda por nombre o marca y filtro por tipo.
-- **Tailwind CSS** como framework de estilos en todo el sitio. Reemplaza a Bootstrap, que se usó en la semana 1.
+- **Filtro por categoría** en el listado. Se guarda en la URL y nunca modifica el inventario original.
+- **Detalle de artículo**: se abre desde la tabla y permite agregar el artículo al carrito. Las unidades agregadas se descuentan del stock.
+- **Carrito de compras**: una pantalla para aumentar, disminuir o quitar unidades. Cada cambio se refleja al mismo tiempo en el inventario.
 
 ## Cumplimiento de la pauta
 
-| Criterio | Puntaje | Implementación |
-| :--- | :---: | :--- |
-| **1. Navegación y gestión de estados con tecnologías de React** | 40 | **Navegación:** `BrowserRouter`, `Routes` y `Route` en `App.jsx`; `NavLink` con ruta activa en los tres menús; `Link`; `useNavigate()` para ir al listado después de guardar, pasando el nombre del artículo por `state`; `useLocation()` para leer ese `state` y mostrar la ruta actual. **Estado global:** `InventarioContext` + `useReducer` (acciones `agregar`, `eliminar` y `reiniciar`), expuesto con el hook `useInventario()` y persistido en `localStorage`. Lo leen el menú (contador), el inicio (indicadores), el listado y el formulario. |
-| **2. Framework CSS** | 20 | Tailwind CSS v4 con el plugin `@tailwindcss/vite`. El tema extendido con la paleta del sitio está en `@theme` dentro de `index.css`. Todo el sitio usa utilidades: responsivas (`md:`, `lg:`), de estado (`hover:`, `focus:`, `aria-*`) y `motion-safe:` para respetar la preferencia de reducir animaciones. |
-| **3. Componente que responde a todos los requerimientos** | 40 | Nuevo menú → `MenuInventario.jsx`. Página para ingresar artículos → `NuevoArticulo.jsx`. Estado global con nombre, marca y tipo → `context/`. Tabla con todo el inventario → `ListadoArticulos.jsx`. Framework CSS → Tailwind. |
+| # | Criterio | Pts | Dónde se cumple |
+| :-: | :--- | :-: | :--- |
+| 1 | Pantalla de listado | 15 | `ListadoArticulos` + `TablaArticulos`: nombre (enlace al detalle), marca, tipo, stock, precio, estado de stock y acción. Muestra un conteo "Mostrando X de Y" y tiene `caption` y `scope` para accesibilidad. |
+| 2 | Filtro con actualización dinámica del estado | 15 | `FiltrosArticulos` + `useSearchParams` (`?tipo=Lácteos&q=leche`). La lista se deriva con `filtrarArticulos()`, que no modifica el arreglo original (lo cubre una prueba). El filtro se mantiene al ir al detalle y volver. |
+| 3 | Pantalla de detalle | 15 | `DetalleArticulo` en `/inventario/:id` con `useParams`. Muestra los datos completos, el estado de stock y las unidades en el carrito. La cantidad se limita al stock disponible y hay un aviso `role="status"`. Un id inexistente muestra "Artículo no encontrado". |
+| 4 | Modificación con actualización del inventario | 15 | El reducer tiene las acciones `agregarAlCarrito`, `aumentar`, `disminuir` y `quitarDelCarrito`, que mueven unidades entre el stock y el carrito en una sola operación. Hay una prueba que comprueba que **stock + carrito se mantiene igual** después de cada acción. |
+| 5 | Framework CSS y diseño responsive | 15 | Tailwind CSS v4 (`@tailwindcss/vite`), con el tema en `@theme` y componentes de estilo con `@apply` (`.control`, `.btn-*`). Usa utilidades responsivas (`sm:`, `md:`, `lg:`). El carrito se ve como tarjetas en el celular y como tabla desde `md:`. No hay estilos en línea. |
+| 6 | Código modular y reutilizable | 15 | Carpetas `pages`, `components`, `context`, `routes`, `utils` y `data`. Los selectores y las validaciones se comparten entre páginas, y hay componentes reutilizables (`EncabezadoPagina`, `CampoFormulario`, `LineaCarrito`, `LlamadoAccion`, `Layout`). 89 pruebas unitarias. |
+| 7 | GitHub, documentación y gh-pages | 10 | Este README y el sitio publicado con `npm run deploy` (rama `gh-pages`). Las rutas abiertas directamente funcionan gracias a `404.html`. |
 
 ## Rutas
 
-| Ruta | Página | Menú |
-| :--- | :--- | :--- |
-| `/` | Inicio: indicadores y alertas de reposición calculados desde el estado global | Sitio |
-| `/tiendas` | Nuestras tiendas | Sitio |
-| `/preguntas-frecuentes` | Preguntas frecuentes | Sitio |
-| `/inventario` | **Listado de artículos** (tabla) | **Inventario** |
-| `/inventario/nuevo` | **Agregar artículo** (formulario) | **Inventario** |
-| `*` | Página 404 | — |
+Todas están definidas en `src/routes/AppRoutes.jsx`, anidadas bajo `Layout` (`<Outlet>`) y cargadas con `React.lazy` + `Suspense`.
+
+| Ruta | Página |
+| :--- | :--- |
+| `/` | Inicio: indicadores y alertas de reposición |
+| `/tiendas` | Nuestras tiendas |
+| `/preguntas-frecuentes` | Preguntas frecuentes |
+| `/inventario` | Listado con filtro por categoría y búsqueda |
+| `/inventario/nuevo` | Agregar artículo (formulario validado) |
+| `/inventario/:id` | **Detalle del artículo** y agregar al carrito |
+| `/carrito` | **Carrito de compras** |
+| `*` | Página 404 |
 
 ## Estado global
 
+Usa Context API + `useReducer` (`src/context/`):
+
 ```text
-context/
-├── inventario.js           createContext, reducer y hook useInventario()
-└── InventarioProvider.jsx  useReducer + persistencia en localStorage
+{ articulos: [...], carrito: [{ id, cantidad }], siguienteId }
 ```
 
-El reducer nunca modifica el arreglo anterior: devuelve uno nuevo, y por eso React vuelve a renderizar los componentes que usan el contexto. Al agregar un artículo, el contador del menú, los indicadores del inicio y la tabla se actualizan sin pasar props entre páginas.
+| Acción | Efecto |
+| :--- | :--- |
+| `agregarAlCarrito(id, n)` | Mueve `min(n, stock)` unidades del stock al carrito. Si no hay stock, no cambia nada. |
+| `aumentar(id)` / `disminuir(id)` | Mueve de a 1 unidad. La línea sale del carrito cuando llega a 0. |
+| `quitarDelCarrito(id)` | Devuelve todas las unidades al stock. |
+| `agregar` / `eliminar` / `restaurar` / `reiniciar` | Alta con id único, baja (también del carrito), deshacer la baja y volver al inventario inicial. |
 
-**Validaciones del formulario:** el nombre debe tener al menos 3 caracteres; la marca y el tipo son obligatorios; el stock y el stock mínimo deben ser enteros mayores o iguales a 0; el precio debe ser un entero mayor a 0; y no se acepta un artículo con el mismo nombre y marca que uno existente. Los errores se muestran bajo cada campo, con `aria-invalid` y `aria-describedby`.
+**Regla que siempre se cumple:** para cada artículo, stock + cantidad en el carrito = total. El carrito vive en el mismo reducer que el inventario porque depende del stock; así cada movimiento es una sola acción y no hay estados desincronizados. La búsqueda y el filtro no son estado global: viven en la URL del listado.
+
+**Persistencia** (`almacenamiento.js`): el estado se guarda en `localStorage` con el formato `{ version: 2, ... }`. Al leerlo se valida la forma de cada artículo y del carrito. Si encuentra el formato de la semana 2 (un arreglo simple), lo migra. Si el JSON está dañado o es de otra versión, parte con el inventario inicial en vez de romper el sitio.
+
+## Mejoras según la retroalimentación
+
+### Semana 2
+
+| Observación del docente | Cómo se abordó |
+| :--- | :--- |
+| Migrar a `react-router` | La dependencia y las 11 importaciones pasaron de `react-router-dom` a `react-router` (v7.18). |
+| Expresiones regulares en `validar()` | Patrones con bandera `u` para nombre, marca, stock, stock mínimo y precio. Rechazan, por ejemplo, `-5`, `1.5`, `1e3`, `0100` y `<script>`. |
+| Extraer reglas y esquema, con pruebas | `utils/validaciones.js` (`esquemaArticulo` + `validar`) con 38 pruebas. `NuevoArticulo` recorre el esquema con `map`. |
+| Estilos de controles duplicados | `.control` y `.btn-*` con `@apply` en `index.css`. El borde de error sale de `aria-invalid`. |
+| Separar `Campo` | Ahora es `components/CampoFormulario.jsx`. |
+| Selectores compartidos | `utils/selectores.js` (`resumenInventario`, `tiposDisponibles`, `filtrarArticulos`, `lineasCarrito`, `totalCarrito`) con pruebas. Lo usan Home, el listado, el carrito y el menú. |
+| Confirmar eliminación y avisar | `window.confirm` antes de eliminar (avisa si el artículo está en el carrito) y un aviso `role="status"` con **Deshacer**. Restaurar el inventario también pide confirmación. |
+| Versionar y validar `localStorage` | Formato v2 con migración desde la S2. Ante datos dañados, vuelve al inventario inicial. 22 pruebas. |
+
+### Semana 1 (resuelta en la semana 2 y mantenida)
+
+| Observación | Estado |
+| :--- | :--- |
+| Rutas repetidas entre Encabezado y BottomNav | `data/rutas.js`, recorrido con `map` por ambos menús. |
+| Encabezados de página repetidos | Componente `EncabezadoPagina`. |
+| Llamado a la acción duplicado | Componente `LlamadoAccion`. |
+| Home con demasiadas responsabilidades | `AlertaReposicion`, `FiltrosArticulos` y `TablaArticulos`. |
+| Bootstrap, CSS extenso y `style` en línea | Solo Tailwind: `index.css` de 78 líneas (tema, base y componentes) y ningún `style=`. |
 
 ## Estructura
 
 ```text
 src/
-├── App.jsx                     Provider + router + layout
-├── context/                    Estado global del inventario
-├── components/
-│   ├── Encabezado.jsx          Marca + menú del sitio (tablet/desktop)
-│   ├── MenuInventario.jsx      Menú nuevo: Artículos / Agregar artículo
-│   ├── BottomNav.jsx           Menú inferior del sitio
-│   ├── EncabezadoPagina.jsx    Banner de título reutilizable
-│   ├── LlamadoAccion.jsx       Bloque de llamado a la acción (Tiendas y FAQ)
-│   ├── TarjetaResumen.jsx      Tarjeta de indicador
-│   ├── AlertaReposicion.jsx    Aviso de artículos bajo el stock mínimo (Inicio)
-│   ├── FiltrosArticulos.jsx    Búsqueda y filtro por tipo (Listado)
-│   └── TablaArticulos.jsx      Tabla de artículos (Listado)
-├── pages/                      Home, ListadoArticulos, NuevoArticulo, NuestrasTiendas, PreguntasFrecuentes, NotFound
-├── data/                       Rutas del menú, artículos iniciales, tiendas y preguntas
-└── utils/                      Formato CLP y estado de stock
+├── App.jsx                   Provider + BrowserRouter (basename para gh-pages)
+├── routes/AppRoutes.jsx      Todas las rutas, anidadas bajo Layout, con lazy
+├── context/
+│   ├── inventario.js         Contexto, reducer (artículos + carrito) y useInventario()
+│   ├── InventarioProvider.jsx useReducer + persistencia
+│   └── almacenamiento.js     Formato versionado, migración y validación
+├── components/               Layout, menús, EncabezadoPagina, CampoFormulario,
+│                             FiltrosArticulos, TablaArticulos, LineaCarrito, ...
+├── pages/                    Home, ListadoArticulos, DetalleArticulo, Carrito,
+│                             NuevoArticulo, NuestrasTiendas, PreguntasFrecuentes, NotFound
+├── utils/                    selectores, validaciones, formato CLP, estado de stock
+└── data/                     Artículos iniciales, tipos, rutas del menú, tiendas, FAQ
 ```
 
-## Mejoras según la retroalimentación de la Semana 1
-
-| Observación del docente | Cómo se abordó |
-| :--- | :--- |
-| `Encabezado` y `BottomNav` repetían los mismos `NavLink` | Las rutas están en un arreglo compartido (`data/rutas.js`) que ambos menús recorren con `map`. `BottomNav` solo agrega el ícono de cada ruta. |
-| Antetítulo, badge de ruta, título y bajada repetidos en cada página | Se creó `EncabezadoPagina`, que recibe `antetitulo`, `titulo` y la bajada como `children`. Lo usan las cinco páginas con banner. |
-| Llamado a la acción con gradiente duplicado en Tiendas y FAQ | Se creó `LlamadoAccion`, que recibe `titulo`, `texto`, `to` y `etiqueta`. Ya no quedan estilos en línea. |
-| `Home` mezclaba métricas, alerta, filtros y tabla (~180 líneas) | Se separaron `AlertaReposicion`, `FiltrosArticulos` y `TablaArticulos`. `Home` queda en ~55 líneas y `ListadoArticulos` en ~65, cada una solo con su estado y su composición. |
-| Mezcla de Bootstrap, `index.css` de 761 líneas y `style` en línea | Se usa una sola estrategia, Tailwind CSS. `index.css` queda en 46 líneas (tema y estilos base) y no hay ningún atributo `style` en el código. |
-| Revisar recorridos, incluidas las rutas inexistentes | Ruta comodín `*` → `NotFound`, con un enlace de vuelta al inicio. Desde el formulario, guardar lleva al listado con `useNavigate` + `state`. |
+Las pruebas (`*.test.js`) están junto al módulo que prueban.
 
 ## Cómo ejecutar
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173
-npm run build     # build de producción en dist/
+npm run dev       # http://localhost:5173/supermercado-felipe-penaloza-pfy2202/
+npm test          # Vitest en modo watch (npm test -- --run para una sola pasada)
 npm run lint
+npm run build     # dist/ + 404.html
+npm run preview   # sirve el build localmente
+npm run deploy    # build y publicación en la rama gh-pages
 ```
 
-El botón **Restaurar inventario inicial**, al pie del listado, vuelve a los 14 artículos de ejemplo.
+El botón **Restaurar inventario inicial**, al pie del listado, vuelve a los 14 artículos de ejemplo y vacía el carrito.

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router'
 import { rutasSitio } from '../data/rutas.js'
 
 /*
